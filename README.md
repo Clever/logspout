@@ -1,5 +1,9 @@
 # logspout
 
+[![CircleCI](https://img.shields.io/circleci/project/gliderlabs/logspout/release.svg)](https://circleci.com/gh/gliderlabs/logspout)
+[![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://registry.hub.docker.com/u/gliderlabs/logspout/)
+[![IRC Channel](https://img.shields.io/badge/irc-%23gliderlabs-blue.svg)](https://kiwiirc.com/client/irc.freenode.net/#gliderlabs)
+
 > Docker Hub automated builds for `gliderlabs/logspout:latest` and `progrium/logspout:latest` are now pointing to the `release` branch. For `master`, use `gliderlabs/logspout:master`. Individual versions are also available as saved images in [releases](https://github.com/gliderlabs/logspout/releases).
 
 Logspout is a log router for Docker containers that runs inside Docker. It attaches to all containers on a host, then routes their logs wherever you want. It also has an extensible module system.
@@ -22,14 +26,14 @@ You can also download and load a specific version:
 
 #### Route all container output to remote syslog
 
-The simplest way to use logspout is to just take all logs and ship to a remote syslog. Just pass a syslog URI (or several comma separated URIs) as the command. Also, we always mount the Docker Unix socket with `-v` to `/tmp/docker.sock`:
+The simplest way to use logspout is to just take all logs and ship to a remote syslog. Just pass a syslog URI (or several comma separated URIs) as the command. Also, we always mount the Docker Unix socket with `-v` to `/var/run/docker.sock`:
 
 	$ docker run --name="logspout" \
-		--volume=/var/run/docker.sock:/tmp/docker.sock \
+		--volume=/var/run/docker.sock:/var/run/docker.sock \
 		gliderlabs/logspout \
 		syslog://logs.papertrailapp.com:55555
 
-logspout will gather logs from other containers that are started **without the `-t` option**. 
+logspout will gather logs from other containers that are started **without the `-t` option**.
 
 To see what data is used for syslog messages, see the [syslog adapter](http://github.com/gliderlabs/logspout/blob/master/adapters) docs.
 
@@ -44,7 +48,7 @@ You can tell logspout to ignore specific containers by setting an environment va
 Using the [httpstream module](http://github.com/gliderlabs/logspout/blob/master/httpstream), you can connect with curl to see your local aggregated logs in realtime. You can do this without setting up a route URI.
 
 	$ docker run -d --name="logspout" \
-		--volume=/var/run/docker.sock:/tmp/docker.sock \
+		--volume=/var/run/docker.sock:/var/run/docker.sock \
 		--publish=127.0.0.1:8000:80 \
 		gliderlabs/logspout
 	$ curl http://127.0.0.1:8000/logs
@@ -75,8 +79,9 @@ The standard distribution of logspout comes with all modules defined in this rep
 
  * adapters/raw
  * adapters/syslog
- * conntypes/tcp
- * conntypes/udp
+ * transports/tcp
+ * transports/tls
+ * transports/udp
  * httpstream
  * routesapi
 
@@ -99,3 +104,4 @@ This project was made possible by [DigitalOcean](http://digitalocean.com) and [D
 ## License
 
 BSD
+<img src="https://ga-beacon.appspot.com/UA-58928488-2/logspout/readme?pixel" />
